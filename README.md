@@ -1,34 +1,15 @@
 # Angular Style Guide
 
-*Opinionated Angular style guide for teams by [@john_papa](//twitter.com/john_papa)*
+*Opinionated Angular style guide for Element teams. This styleguide is based on the Angular styleguide created by [@john_papa](//twitter.com/john_papa)*
 
-If you are looking for an opinionated style guide for syntax, conventions, and structuring Angular applications, then step right in. These styles are based on my development experience with [Angular](//angularjs.org), presentations, [Pluralsight training courses](http://pluralsight.com/training/Authors/Details/john-papa) and working in teams.
-
-The purpose of this style guide is to provide guidance on building Angular applications by showing the conventions I use and, more importantly, why I choose them.
-
->If you like this guide, check out my [Angular Patterns: Clean Code](http://jpapa.me/ngclean) course at Pluralsight which is a companion to this guide.
-
-  [![Angular Patterns: Clean Code](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/ng-clean-code-banner.png)](http://jpapa.me/ngclean)
-
-## Community Awesomeness and Credit
-Never work in a vacuum. I find that the Angular community is an incredible group who are passionate about sharing experiences. As such, a friend and Angular expert Todd Motto and I have collaborated on many styles and conventions. We agree on most, and some we diverge. I encourage you to check out [Todd's guidelines](https://github.com/toddmotto/angularjs-styleguide) to get a sense for his approach and how it compares.
-
-Many of my styles have been from the many pair programming sessions [Ward Bell](http://twitter.com/wardbell) and I have had. My friend Ward has certainly helped influence the ultimate evolution of this guide.
-
-## See the Styles in a Sample App
-While this guide explains the *what*, *why* and *how*, I find it helpful to see them in practice. This guide is accompanied by a sample application that follows these styles and patterns. You can find the [sample application (named modular) here](https://github.com/johnpapa/ng-demos) in the `modular` folder. Feel free to grab it, clone it, or fork it. [Instructions on running it are in its readme](https://github.com/johnpapa/ng-demos/tree/master/modular).
-
-##Translations
-[Translations of this Angular style guide](https://github.com/johnpapa/angular-styleguide/tree/master/i18n) are maintained by the community and can be found here.
+The purpose of this style guide is to provide guidance on building Element applications by showing the conventions we use and, more importantly, why we chose them.
 
 ## Table of Contents
 
   1. [Single Responsibility](#single-responsibility)
-  1. [IIFE](#iife)
   1. [Modules](#modules)
   1. [Controllers](#controllers)
   1. [Services](#services)
-  1. [Factories](#factories)
   1. [Data Services](#data-services)
   1. [Directives](#directives)
   1. [Resolving Promises for a Controller](#resolving-promises-for-a-controller)
@@ -44,13 +25,13 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   1. [Testing](#testing)
   1. [Animations](#animations)
   1. [Comments](#comments)
-  1. [JSHint](#js-hint)
+  <!--1. [JSHint](#js-hint)
   1. [JSCS](#jscs)
   1. [Constants](#constants)
   1. [File Templates and Snippets](#file-templates-and-snippets)
   1. [Yeoman Generator](#yeoman-generator)
   1. [Routing](#routing)
-  1. [Task Automation](#task-automation)
+  1. [Task Automation](#task-automation)-->
   1. [Filters](#filters)
   1. [Angular Docs](#angular-docs)
   1. [Contributing](#contributing)
@@ -72,9 +53,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .controller('SomeController', SomeController)
       .factory('someFactory', someFactory);
 
-  function SomeController() { }
+  class SomeController() { }
 
-  function someFactory() { }
+  class someFactory() { }
   ```
 
   The same components are now separated into their own files.
@@ -95,7 +76,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .controller('SomeController', SomeController);
 
-  function SomeController() { }
+  class SomeController() { }
   ```
 
   ```javascript
@@ -106,73 +87,8 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .factory('someFactory', someFactory);
 
-  function someFactory() { }
+  class someFactory() { }
   ```
-
-**[Back to top](#table-of-contents)**
-
-## IIFE
-### JavaScript Closures
-###### [Style [Y010](#style-y010)]
-
-  - Wrap Angular components in an Immediately Invoked Function Expression (IIFE).
-
-  *Why?*: An IIFE removes variables from the global scope. This helps prevent variables and function declarations from living longer than expected in the global scope, which also helps avoid variable collisions.
-
-  *Why?*: When your code is minified and bundled into a single file for deployment to a production server, you could have collisions of variables and many global variables. An IIFE protects you against both of these by providing variable scope for each file.
-
-  ```javascript
-  /* avoid */
-  // logger.js
-  angular
-      .module('app')
-      .factory('logger', logger);
-
-  // logger function is added as a global variable
-  function logger() { }
-
-  // storage.js
-  angular
-      .module('app')
-      .factory('storage', storage);
-
-  // storage function is added as a global variable
-  function storage() { }
-  ```
-
-  ```javascript
-  /**
-   * recommended
-   *
-   * no globals are left behind
-   */
-
-  // logger.js
-  (function() {
-      'use strict';
-
-      angular
-          .module('app')
-          .factory('logger', logger);
-
-      function logger() { }
-  })();
-
-  // storage.js
-  (function() {
-      'use strict';
-
-      angular
-          .module('app')
-          .factory('storage', storage);
-
-      function storage() { }
-  })();
-  ```
-
-  - Note: For brevity only, the rest of the examples in this guide may omit the IIFE syntax.
-
-  - Note: IIFE's prevent test code from reaching private members like regular expressions or helper functions which are often good to unit test directly on their own. However you can test these through accessible members or by exposing them through their own component. For example placing helper functions, regular expressions or constants in their own factory or constant.
 
 **[Back to top](#table-of-contents)**
 
@@ -227,7 +143,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   var app = angular.module('app');
   app.controller('SomeController', SomeController);
 
-  function SomeController() { }
+  class SomeController() { }
   ```
 
   ```javascript
@@ -236,7 +152,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .controller('SomeController', SomeController);
 
-  function SomeController() { }
+  class SomeController() { }
   ```
 
 ### Setting vs Getting
@@ -254,41 +170,6 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   // to get a module
   angular.module('app');
-  ```
-
-### Named vs Anonymous Functions
-###### [Style [Y024](#style-y024)]
-
-  - Use named functions instead of passing an anonymous function in as a callback.
-
-  *Why?*: This produces more readable code, is much easier to debug, and reduces the amount of nested callback code.
-
-  ```javascript
-  /* avoid */
-  angular
-      .module('app')
-      .controller('Dashboard', function() { })
-      .factory('logger', function() { });
-  ```
-
-  ```javascript
-  /* recommended */
-
-  // dashboard.js
-  angular
-      .module('app')
-      .controller('Dashboard', Dashboard);
-
-  function Dashboard() { }
-  ```
-
-  ```javascript
-  // logger.js
-  angular
-      .module('app')
-      .factory('logger', logger);
-
-  function logger() { }
   ```
 
 **[Back to top](#table-of-contents)**
@@ -333,230 +214,28 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```javascript
   /* avoid */
-  function Customer($scope) {
+  class Customer {
+    
+    public static $inject = ['$scope'];
+    
+    constructor($scope){
       $scope.name = {};
-      $scope.sendMessage = function() { };
+      $scope.sendMessage = this.sendMessage;
+    }
+    
+    sendMessage() {}
   }
   ```
 
   ```javascript
-  /* recommended - but see next section */
-  function Customer() {
+  /* recommended */
+  class Customer {
+    
+    constructor(){
       this.name = {};
-      this.sendMessage = function() { };
-  }
-  ```
-
-### controllerAs with vm
-###### [Style [Y032](#style-y032)]
-
-  - Use a capture variable for `this` when using the `controllerAs` syntax. Choose a consistent variable name such as `vm`, which stands for ViewModel.
-
-  *Why?*: The `this` keyword is contextual and when used within a function inside a controller may change its context. Capturing the context of `this` avoids encountering this problem.
-
-  ```javascript
-  /* avoid */
-  function Customer() {
-      this.name = {};
-      this.sendMessage = function() { };
-  }
-  ```
-
-  ```javascript
-  /* recommended */
-  function Customer() {
-      var vm = this;
-      vm.name = {};
-      vm.sendMessage = function() { };
-  }
-  ```
-
-  Note: You can avoid any [jshint](http://www.jshint.com/) warnings by placing the comment above the line of code. However it is not needed when the function is named using UpperCasing, as this convention means it is a constructor function, which is what a controller is in Angular.
-
-  ```javascript
-  /* jshint validthis: true */
-  var vm = this;
-  ```
-
-  Note: When creating watches in a controller using `controller as`, you can watch the `vm.*` member using the following syntax. (Create watches with caution as they add more load to the digest cycle.)
-
-  ```html
-  <input ng-model="vm.title"/>
-  ```
-
-  ```javascript
-  function SomeController($scope, $log) {
-      var vm = this;
-      vm.title = 'Some Title';
-
-      $scope.$watch('vm.title', function(current, original) {
-          $log.info('vm.title was %s', original);
-          $log.info('vm.title is now %s', current);
-      });
-  }
-  ```
-
-### Bindable Members Up Top
-###### [Style [Y033](#style-y033)]
-
-  - Place bindable members at the top of the controller, alphabetized, and not spread through the controller code.
-
-    *Why?*: Placing bindable members at the top makes it easy to read and helps you instantly identify which members of the controller can be bound and used in the View.
-
-    *Why?*: Setting anonymous functions in-line can be easy, but when those functions are more than 1 line of code they can reduce the readability. Defining the functions below the bindable members (the functions will be hoisted) moves the implementation details down, keeps the bindable members up top, and makes it easier to read.
-
-  ```javascript
-  /* avoid */
-  function Sessions() {
-      var vm = this;
-
-      vm.gotoSession = function() {
-        /* ... */
-      };
-      vm.refresh = function() {
-        /* ... */
-      };
-      vm.search = function() {
-        /* ... */
-      };
-      vm.sessions = [];
-      vm.title = 'Sessions';
-  ```
-
-  ```javascript
-  /* recommended */
-  function Sessions() {
-      var vm = this;
-
-      vm.gotoSession = gotoSession;
-      vm.refresh = refresh;
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
-
-      ////////////
-
-      function gotoSession() {
-        /* */
-      }
-
-      function refresh() {
-        /* */
-      }
-
-      function search() {
-        /* */
-      }
-  ```
-
-    ![Controller Using "Above the Fold"](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/above-the-fold-1.png)
-
-  Note: If the function is a 1 liner consider keeping it right up top, as long as readability is not affected.
-
-  ```javascript
-  /* avoid */
-  function Sessions(data) {
-      var vm = this;
-
-      vm.gotoSession = gotoSession;
-      vm.refresh = function() {
-          /**
-           * lines
-           * of
-           * code
-           * affects
-           * readability
-           */
-      };
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
-  ```
-
-  ```javascript
-  /* recommended */
-  function Sessions(sessionDataService) {
-      var vm = this;
-
-      vm.gotoSession = gotoSession;
-      vm.refresh = sessionDataService.refresh; // 1 liner is OK
-      vm.search = search;
-      vm.sessions = [];
-      vm.title = 'Sessions';
-  ```
-
-### Function Declarations to Hide Implementation Details
-###### [Style [Y034](#style-y034)]
-
-  - Use function declarations to hide implementation details. Keep your bindable members up top. When you need to bind a function in a controller, point it to a function declaration that appears later in the file. This is tied directly to the section Bindable Members Up Top. For more details see [this post](http://www.johnpapa.net/angular-function-declarations-function-expressions-and-readable-code).
-
-    *Why?*: Placing bindable members at the top makes it easy to read and helps you instantly identify which members of the controller can be bound and used in the View. (Same as above.)
-
-    *Why?*: Placing the implementation details of a function later in the file moves that complexity out of view so you can see the important stuff up top.
-
-    *Why?*: Function declaration are hoisted so there are no concerns over using a function before it is defined (as there would be with function expressions).
-
-    *Why?*: You never have to worry with function declarations that moving `var a` before `var b` will break your code because `a` depends on `b`.
-
-    *Why?*: Order is critical with function expressions
-
-  ```javascript
-  /**
-   * avoid
-   * Using function expressions.
-   */
-  function Avengers(avengersService, logger) {
-      var vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
-
-      var activate = function() {
-          return getAvengers().then(function() {
-              logger.info('Activated Avengers View');
-          });
-      }
-
-      var getAvengers = function() {
-          return avengersService.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
-          });
-      }
-
-      vm.getAvengers = getAvengers;
-
-      activate();
-  }
-  ```
-
-  Notice that the important stuff is scattered in the preceding example. In the example below, notice that the important stuff is up top. For example, the members bound to the controller such as `vm.avengers` and `vm.title`. The implementation details are down below. This is just easier to read.
-
-  ```javascript
-  /*
-   * recommend
-   * Using function declarations
-   * and bindable members up top.
-   */
-  function Avengers(avengersService, logger) {
-      var vm = this;
-      vm.avengers = [];
-      vm.getAvengers = getAvengers;
-      vm.title = 'Avengers';
-
-      activate();
-
-      function activate() {
-          return getAvengers().then(function() {
-              logger.info('Activated Avengers View');
-          });
-      }
-
-      function getAvengers() {
-          return avengersService.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
-          });
-      }
+    }
+    
+    sendMessage() {}
   }
   ```
 
@@ -576,26 +255,30 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
 
   /* avoid */
-  function Order($http, $q, config, userInfo) {
-      var vm = this;
-      vm.checkCredit = checkCredit;
-      vm.isCreditOk;
-      vm.total = 0;
+  class Order {
+    
+    public static $inject = ['$http'];
+    
+    public isCreditOk: boolean = false;
+    public total: number = 0;
+    
+    constructor(private $http) {
+    }
 
-      function checkCredit() {
+    checkCredit() {
           var settings = {};
           // Get the credit service base URL from config
           // Set credit service required headers
           // Prepare URL query string or data object with request data
           // Add user-identifying info so service gets the right credit limit for this user.
           // Use JSONP for this browser if it doesn't support CORS
-          return $http.get(settings)
-              .then(function(data) {
+          return this.$http.get(settings)
+              .then((data) => {
                // Unpack JSON data in the response object
                  // to find maxRemainingAmount
-                 vm.isCreditOk = vm.total <= maxRemainingAmount
+                 this.isCreditOk = this.total <= maxRemainingAmount
               })
-              .catch(function(error) {
+              .catch((error) => {
                  // Interpret error
                  // Cope w/ timeout? retry? try alternate service?
                  // Re-reject with appropriate error for a user to see
@@ -606,17 +289,21 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```javascript
   /* recommended */
-  function Order(creditService) {
-      var vm = this;
-      vm.checkCredit = checkCredit;
-      vm.isCreditOk;
-      vm.total = 0;
-
-      function checkCredit() {
-         return creditService.isOrderTotalOk(vm.total)
-            .then(function(isOk) { vm.isCreditOk = isOk; })
+  class Order() {
+    
+    public static $inject = ['creditService'];
+    
+    public isCreditOk: boolean = false;
+    public total: number = 0;
+    
+    constructor(private creditService) {
+    }
+    
+    checkCredit() {
+         return this.creditService.isOrderTotalOk(this.total)
+            .then((isOk) => { this.isCreditOk = isOk; })
             .catch(showError);
-      };
+    };
   }
   ```
 
@@ -639,14 +326,14 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
  ```javascript
   /* avoid - when using with a route and dynamic pairing is desired */
 
-  // route-config.js
+  // route-config.ts
   angular
       .module('app')
       .config(config);
 
-  function config($routeProvider) {
-      $routeProvider
-          .when('/avengers', {
+  function config($stateProvider) {
+      $stateProvider
+          .state('/avengers', {
             templateUrl: 'avengers.html'
           });
   }
@@ -661,14 +348,14 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* recommended */
 
-  // route-config.js
+  // route-config.ts
   angular
       .module('app')
       .config(config);
 
-  function config($routeProvider) {
-      $routeProvider
-          .when('/avengers', {
+  function config($stateProvider) {
+      $stateProvider
+          .state('/avengers', {
               templateUrl: 'avengers.html',
               controller: 'Avengers',
               controllerAs: 'vm'
@@ -689,7 +376,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 ### Singletons
 ###### [Style [Y040](#style-y040)]
 
-  - Services are instantiated with the `new` keyword, use `this` for public methods and variables. Since these are so similar to factories, use a factory instead for consistency.
+  - Services are instantiated with the `new` keyword, use `this` for public methods and variables. Since services and factories are so similar and services align with Typescript classes, use a service over a factory.
 
     Note: [All Angular services are singletons](https://docs.angularjs.org/guide/services). This means that there is only one instance of a given service per injector.
 
@@ -699,198 +386,19 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .service('logger', logger);
 
-  function logger() {
-    this.logError = function(msg) {
+  class logger {
+    
+    logError(msg) {
       /* */
     };
   }
   ```
-
-  ```javascript
-  // factory
-  angular
-      .module('app')
-      .factory('logger', logger);
-
-  function logger() {
-      return {
-          logError: function(msg) {
-            /* */
-          }
-     };
-  }
-  ```
-
-**[Back to top](#table-of-contents)**
-
-## Factories
 
 ### Single Responsibility
 ###### [Style [Y050](#style-y050)]
 
-  - Factories should have a [single responsibility](http://en.wikipedia.org/wiki/Single_responsibility_principle), that is encapsulated by its context. Once a factory begins to exceed that singular purpose, a new factory should be created.
+  - Services should have a [single responsibility](http://en.wikipedia.org/wiki/Single_responsibility_principle), that is encapsulated by its context. Once a service begins to exceed that singular purpose, a new service should be created.
 
-### Singletons
-###### [Style [Y051](#style-y051)]
-
-  - Factories are singletons and return an object that contains the members of the service.
-
-    Note: [All Angular services are singletons](https://docs.angularjs.org/guide/services).
-
-### Accessible Members Up Top
-###### [Style [Y052](#style-y052)]
-
-  - Expose the callable members of the service (its interface) at the top, using a technique derived from the [Revealing Module Pattern](http://addyosmani.com/resources/essentialjsdesignpatterns/book/#revealingmodulepatternjavascript).
-
-    *Why?*: Placing the callable members at the top makes it easy to read and helps you instantly identify which members of the service can be called and must be unit tested (and/or mocked).
-
-    *Why?*: This is especially helpful when the file gets longer as it helps avoid the need to scroll to see what is exposed.
-
-    *Why?*: Setting functions as you go can be easy, but when those functions are more than 1 line of code they can reduce the readability and cause more scrolling. Defining the callable interface via the returned service moves the implementation details down, keeps the callable interface up top, and makes it easier to read.
-
-  ```javascript
-  /* avoid */
-  function dataService() {
-    var someValue = '';
-    function save() {
-      /* */
-    };
-    function validate() {
-      /* */
-    };
-
-    return {
-        save: save,
-        someValue: someValue,
-        validate: validate
-    };
-  }
-  ```
-
-  ```javascript
-  /* recommended */
-  function dataService() {
-      var someValue = '';
-      var service = {
-          save: save,
-          someValue: someValue,
-          validate: validate
-      };
-      return service;
-
-      ////////////
-
-      function save() {
-          /* */
-      };
-
-      function validate() {
-          /* */
-      };
-  }
-  ```
-
-  This way bindings are mirrored across the host object, primitive values cannot update alone using the revealing module pattern.
-
-    ![Factories Using "Above the Fold"](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/above-the-fold-2.png)
-
-### Function Declarations to Hide Implementation Details
-###### [Style [Y053](#style-y053)]
-
-  - Use function declarations to hide implementation details. Keep your accessible members of the factory up top. Point those to function declarations that appears later in the file. For more details see [this post](http://www.johnpapa.net/angular-function-declarations-function-expressions-and-readable-code).
-
-    *Why?*: Placing accessible members at the top makes it easy to read and helps you instantly identify which functions of the factory you can access externally.
-
-    *Why?*: Placing the implementation details of a function later in the file moves that complexity out of view so you can see the important stuff up top.
-
-    *Why?*: Function declaration are hoisted so there are no concerns over using a function before it is defined (as there would be with function expressions).
-
-    *Why?*: You never have to worry with function declarations that moving `var a` before `var b` will break your code because `a` depends on `b`.
-
-    *Why?*: Order is critical with function expressions
-
-  ```javascript
-  /**
-   * avoid
-   * Using function expressions
-   */
-   function dataservice($http, $location, $q, exception, logger) {
-      var isPrimed = false;
-      var primePromise;
-
-      var getAvengers = function() {
-          // implementation details go here
-      };
-
-      var getAvengerCount = function() {
-          // implementation details go here
-      };
-
-      var getAvengersCast = function() {
-         // implementation details go here
-      };
-
-      var prime = function() {
-         // implementation details go here
-      };
-
-      var ready = function(nextPromises) {
-          // implementation details go here
-      };
-
-      var service = {
-          getAvengersCast: getAvengersCast,
-          getAvengerCount: getAvengerCount,
-          getAvengers: getAvengers,
-          ready: ready
-      };
-
-      return service;
-  }
-  ```
-
-  ```javascript
-  /**
-   * recommended
-   * Using function declarations
-   * and accessible members up top.
-   */
-  function dataservice($http, $location, $q, exception, logger) {
-      var isPrimed = false;
-      var primePromise;
-
-      var service = {
-          getAvengersCast: getAvengersCast,
-          getAvengerCount: getAvengerCount,
-          getAvengers: getAvengers,
-          ready: ready
-      };
-
-      return service;
-
-      ////////////
-
-      function getAvengers() {
-          // implementation details go here
-      }
-
-      function getAvengerCount() {
-          // implementation details go here
-      }
-
-      function getAvengersCast() {
-          // implementation details go here
-      }
-
-      function prime() {
-          // implementation details go here
-      }
-
-      function ready(nextPromises) {
-          // implementation details go here
-      }
-  }
-  ```
 
 **[Back to top](#table-of-contents)**
 
@@ -899,7 +407,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 ### Separate Data Calls
 ###### [Style [Y060](#style-y060)]
 
-  - Refactor logic for making data operations and interacting with data to a factory. Make data services responsible for XHR calls, local storage, stashing in memory, or any other data operations.
+  - Refactor logic for making data operations and interacting with data to a service. Make data services responsible for XHR calls, local storage, stashing in memory, or any other data operations.
 
     *Why?*: The controller's responsibility is for the presentation and gathering of information for the view. It should not care how it gets the data, just that it knows who to ask for it. Separating the data services moves the logic on how to get it to the data service, and lets the controller be simpler and more focused on the view.
 
@@ -913,28 +421,29 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   // dataservice factory
   angular
       .module('app.core')
-      .factory('dataservice', dataservice);
+      .service('dataservice', dataservice);
+      
+  class dataService {
 
-  dataservice.$inject = ['$http', 'logger'];
+    public static $inject = ['$http', 'logger'];
+  
+    constructor dataservice(private $http, private logger) {
 
-  function dataservice($http, logger) {
-      return {
-          getAvengers: getAvengers
-      };
+    }
 
-      function getAvengers() {
-          return $http.get('/api/maa')
-              .then(getAvengersComplete)
-              .catch(getAvengersFailed);
+    getAvengers() {
+       return this.$http.get('/api/maa')
+              .then(this.getAvengersComplete)
+              .catch(this.getAvengersFailed);
 
-          function getAvengersComplete(response) {
-              return response.data.results;
-          }
+    getAvengersComplete(response) {
+      return response.data.results;
+    }
 
-          function getAvengersFailed(error) {
-              logger.error('XHR Failed for getAvengers.' + error.data);
-          }
-      }
+    getAvengersFailed(error) {
+      this.logger.error('XHR Failed for getAvengers.' + error.data);
+    }
+    
   }
   ```
 
@@ -948,27 +457,31 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app.avengers')
       .controller('Avengers', Avengers);
 
-  Avengers.$inject = ['dataservice', 'logger'];
+  
+  class Avengers {
+    
+    private avengers : Array<IAvenger>;
+    
+    Avengers.$inject = ['dataservice', 'logger'];
 
-  function Avengers(dataservice, logger) {
-      var vm = this;
-      vm.avengers = [];
+    constructor Avengers(dataservice, logger) {
+        this.avengers = [];
+        this.activate();
+    }
 
-      activate();
-
-      function activate() {
-          return getAvengers().then(function() {
-              logger.info('Activated Avengers View');
+    activate() {
+          return this.getAvengers().then(() => {
+              this.logger.info('Activated Avengers View');
           });
       }
 
-      function getAvengers() {
-          return dataservice.getAvengers()
-              .then(function(data) {
-                  vm.avengers = data;
-                  return vm.avengers;
-              });
-      }
+    getAvengers() {
+          return this.dataservice.getAvengers()
+              .then((data) => {
+                  this.avengers = data;
+                  return this.avengers;
+                });
+     }
   }
   ```
 
@@ -982,37 +495,35 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```javascript
   /* recommended */
 
-  activate();
-
-  function activate() {
+  activate() {
       /**
        * Step 1
        * Ask the getAvengers function for the
        * avenger data and wait for the promise
        */
-      return getAvengers().then(function() {
+      return this.getAvengers().then(() => {
           /**
            * Step 4
            * Perform an action on resolve of final promise
            */
-          logger.info('Activated Avengers View');
+          this.logger.info('Activated Avengers View');
       });
   }
 
-  function getAvengers() {
+  getAvengers() {
         /**
          * Step 2
          * Ask the data service for the data and wait
          * for the promise
          */
-        return dataservice.getAvengers()
-            .then(function(data) {
+        return this.dataservice.getAvengers()
+            .then((data) => {
                 /**
                  * Step 3
                  * set the data and resolve the promise
                  */
-                vm.avengers = data;
-                return vm.avengers;
+                this.avengers = data;
+                return this.avengers;
         });
   }
   ```
@@ -1033,7 +544,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```javascript
   /* avoid */
-  /* directives.js */
+  /* directives.ts */
 
   angular
       .module('app.widgets')
@@ -1062,53 +573,67 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```javascript
   /* recommended */
-  /* calendarRange.directive.js */
+  /* index.ts */
 
   /**
-   * @desc order directive that is specific to the order module at a company named Acme
-   * @example <div acme-order-calendar-range></div>
+   * @desc order directive that is specific to the order module
+   * @example <div jhc-order-calendar-range></div>
    */
+  
+  import orderCalendarRange = require('./order-calendar-range');
+  
+  
   angular
       .module('sales.order')
-      .directive('acmeOrderCalendarRange', orderCalendarRange);
+      .directive('jhcOrderCalendarRange', orderCalendarRange);
+      .directive('jhcSalesCustomerInfo', salesCustomerInfo);
+      
+  ```
+  
+  ```javascript
+  /* recommended */
+  /* order-calendar-range-directive.ts */
 
-  function orderCalendarRange() {
+  /**
+  * @desc order directive that is specific to the order module at a company named Acme
+  * @example <div acme-order-calendar-range></div>
+  */
+  var directive = [() => {
       /* implementation details */
-  }
+  }]
+  
+  export = directive;
   ```
 
   ```javascript
   /* recommended */
-  /* customerInfo.directive.js */
+  /* customer-info-directive.ts */
 
   /**
-   * @desc sales directive that can be used anywhere across the sales app at a company named Acme
-   * @example <div acme-sales-customer-info></div>
+   * @desc sales directive that can be used anywhere across the app
+   * @example <div jhc-sales-customer-info></div>
    */
-  angular
-      .module('sales.widgets')
-      .directive('acmeSalesCustomerInfo', salesCustomerInfo);
 
-  function salesCustomerInfo() {
+  var directive = [() => {
       /* implementation details */
-  }
+  }];
+  
+  export = directive;
   ```
 
   ```javascript
   /* recommended */
-  /* spinner.directive.js */
+  /* spinner.directive.ts */
 
   /**
-   * @desc spinner directive that can be used anywhere across apps at a company named Acme
-   * @example <div acme-shared-spinner></div>
+   * @desc spinner directive that can be used anywhere across apps
+   * @example <div jhc-shared-spinner></div>
    */
-  angular
-      .module('shared.widgets')
-      .directive('acmeSharedSpinner', sharedSpinner);
-
-  function sharedSpinner() {
+  var directive = [() => {
       /* implementation details */
-  }
+  }];
+  
+  export = directive;
   ```
 
     Note: There are many naming options for directives, especially since they can be used in narrow or wide scopes. Choose one that makes the directive and its file name distinct and clear. Some examples are below, but see the [Naming](#naming) section for more recommendations.
@@ -1120,10 +645,10 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
     *Why?*: DOM manipulation can be difficult to test, debug, and there are often better ways (e.g. CSS, animations, templates)
 
-### Provide a Unique Directive Prefix
+### Provide jhc as a Unique Directive Prefix
 ###### [Style [Y073](#style-y073)]
 
-  - Provide a short, unique and descriptive directive prefix such as `acmeSalesCustomerInfo` which would be declared in HTML as `acme-sales-customer-info`.
+  - Provide jhc as a short, unique and descriptive directive prefix such as `jhcSalesCustomerInfo` which would be declared in HTML as `acme-sales-customer-info`.
 
     *Why?*: The unique short prefix identifies the directive's context and origin. For example a prefix of `cc-` may indicate that the directive is part of a CodeCamper app while `acme-` may indicate a directive for the Acme company.
 
@@ -1147,11 +672,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```javascript
   /* avoid */
-  angular
-      .module('app.widgets')
-      .directive('myCalendarRange', myCalendarRange);
-
-  function myCalendarRange() {
+  var directive = [() => {
       var directive = {
           link: link,
           templateUrl: '/template/is/located/here.html',
@@ -1162,7 +683,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       function link(scope, element, attrs) {
         /* */
       }
-  }
+  }];
+  
+  export = directive;
   ```
 
   ```html
@@ -1173,11 +696,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```javascript
   /* recommended */
-  angular
-      .module('app.widgets')
-      .directive('myCalendarRange', myCalendarRange);
-
-  function myCalendarRange() {
+  var directive = [ () => {
       var directive = {
           link: link,
           templateUrl: '/template/is/located/here.html',
@@ -1188,7 +707,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       function link(scope, element, attrs) {
         /* */
       }
-  }
+  }];
+  
+  export = directive;
   ```
 
 ### Directives and ControllerAs
@@ -1202,18 +723,14 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
     Note: Regarding dependency injection, see [Manually Identify Dependencies](#manual-annotating-for-dependency-injection).
 
-    Note: Note that the directive's controller is outside the directive's closure. This style eliminates issues where the injection gets created as unreachable code after a `return`.
-
   ```html
   <div my-example max="77"></div>
   ```
 
   ```javascript
-  angular
-      .module('app')
-      .directive('myExample', myExample);
-
-  function myExample() {
+  /* my-example-directive.ts */
+  
+  var directive = [() => {
       var directive = {
           restrict: 'EA',
           templateUrl: 'app/feature/example.directive.html',
@@ -1221,7 +738,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
               max: '='
           },
           link: linkFunc,
-          controller: ExampleController,
+          controller: require('./my-example-controller'),
           controllerAs: 'vm',
           bindToController: true // because the scope is isolated
       };
@@ -1234,21 +751,33 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
           console.log('LINK: scope.vm.min = %s', scope.vm.min);
           console.log('LINK: scope.vm.max = %s', scope.vm.max);
       }
+  }];
+  
+  export = directive;
+  ```
+  
+  ```javascript
+  /* my-example-controller.ts */
+  
+  class ExampleController {
+  
+    public static $inject = ['$scope'];
+    
+    public min: number;
+    public max: number;
+  
+    constructor($scope) {
+        // Injecting $scope just for comparison
+        this.min = 3;
+  
+        console.log('CTRL: $scope.vm.min = %s', $scope.vm.min);
+        console.log('CTRL: $scope.vm.max = %s', $scope.vm.max);
+        console.log('CTRL: vm.min = %s', vm.min);
+        console.log('CTRL: vm.max = %s', vm.max);
+    }
   }
-
-  ExampleController.$inject = ['$scope'];
-
-  function ExampleController($scope) {
-      // Injecting $scope just for comparison
-      var vm = this;
-
-      vm.min = 3;
-
-      console.log('CTRL: $scope.vm.min = %s', $scope.vm.min);
-      console.log('CTRL: $scope.vm.max = %s', $scope.vm.max);
-      console.log('CTRL: vm.min = %s', vm.min);
-      console.log('CTRL: vm.max = %s', vm.max);
-  }
+  
+  export = ExampleController;
   ```
 
   ```html
@@ -1283,32 +812,39 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   ```
 
   ```javascript
-  angular
-      .module('app')
-      .directive('myExample', myExample);
 
-  function myExample() {
+  var directive = [() => {
       var directive = {
           restrict: 'EA',
           templateUrl: 'app/feature/example.directive.html',
           scope: {
               max: '='
           },
-          controller: ExampleController,
+          controller: require('./example-controller');
           controllerAs: 'vm',
           bindToController: true
       };
 
       return directive;
-  }
-
-  function ExampleController() {
-      var vm = this;
-      vm.min = 3;
-      console.log('CTRL: vm.min = %s', vm.min);
-      console.log('CTRL: vm.max = %s', vm.max);
-  }
+  }];
+  
+  export = directive;
   ```
+  
+  ```javascript
+  /* my-example-controller.ts */
+  
+ class ExampleController {
+    
+    public min: number;
+    public max: number;
+    
+    contructor() {
+      
+      console.log('CTRL: vm.min = %s', this.min);
+      console.log('CTRL: vm.max = %s', this.max);
+    }
+  }
 
   ```html
   <!-- example.directive.html -->
@@ -1333,42 +869,54 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
   ```javascript
   /* avoid */
-  function Avengers(dataservice) {
-      var vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
+  class Avengers {
+    
+    public avengers : Array<IAvenger>;
+    public title: string;
+    
+    constructor(dataservice) {
+      
+      this.avengers = [];
+      this.title = 'Avengers';
 
-      dataservice.getAvengers().then(function(data) {
-          vm.avengers = data;
-          return vm.avengers;
+      dataservice.getAvengers().then((data) => {
+          this.avengers = data;
+          return data;
       });
+    }
   }
   ```
 
   ```javascript
   /* recommended */
-  function Avengers(dataservice) {
-      var vm = this;
-      vm.avengers = [];
-      vm.title = 'Avengers';
+  class Avengers {
+    
+    public avengers : Array<IAvenger>;
+    public title: string;
+    
+    constructor Avengers(dataservice) {
+    
+      this.avengers = [];
+      this.title = 'Avengers';
 
-      activate();
+      this.activate();
+    }
 
       ////////////
 
-      function activate() {
-          return dataservice.getAvengers().then(function(data) {
-              vm.avengers = data;
-              return vm.avengers;
-          });
-      }
+    activate() {
+        return dataservice.getAvengers().then((data) => {
+            this.avengers = data;
+            return data;
+        });
+    }
   }
   ```
 
-### Route Resolve Promises
+### State Resolve Promises
 ###### [Style [Y081](#style-y081)]
 
-  - When a controller depends on a promise to be resolved before the controller is activated, resolve those dependencies in the `$routeProvider` before the controller logic is executed. If you need to conditionally cancel a route before the controller is activated, use a route resolver.
+  - When a controller depends on a promise to be resolved before the controller is activated, resolve those dependencies in the `$stateProvider` before the controller logic is executed. If you need to conditionally cancel a route before the controller is activated, use a route resolver.
 
   - Use a route resolve when you want to decide to cancel the route before ever transitioning to the View.
 
@@ -1384,14 +932,20 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .controller('Avengers', Avengers);
 
-  function Avengers(movieService) {
-      var vm = this;
-      // unresolved
-      vm.movies;
+    
+  class Avengers {
+    
+    public movies: Array<IMovie>;
+    
+    public static $inject = ['movieService'];
+    
+    constructor(movieService) {
+      
       // resolved asynchronously
-      movieService.getMovies().then(function(response) {
-          vm.movies = response.movies;
+      movieService.getMovies().then((response) => {
+          this.movies = response.movies;
       });
+    }
   }
   ```
 
@@ -1403,14 +957,14 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .config(config);
 
-  function config($routeProvider) {
-      $routeProvider
-          .when('/avengers', {
+  function config($stateProvider) {
+      $stateProvider
+          .state('/avengers', {
               templateUrl: 'avengers.html',
               controller: 'Avengers',
               controllerAs: 'vm',
               resolve: {
-                  moviesPrepService: function(movieService) {
+                  moviesPrepService: (movieService) => {
                       return movieService.getMovies();
                   }
               }
@@ -1421,15 +975,20 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   angular
       .module('app')
       .controller('Avengers', Avengers);
+      
+  class Avengers {
+    
+    public movies: Array<IMovie>;
 
-  Avengers.$inject = ['moviesPrepService'];
-  function Avengers(moviesPrepService) {
-      var vm = this;
-      vm.movies = moviesPrepService.movies;
+    public static $inject = ['moviesPrepService'];
+    
+    constructor(moviesPrepService) {
+        this.movies = moviesPrepService.movies;
+    }
   }
   ```
 
-    Note: The example below shows the route resolve points to a named function, which is easier to debug and easier to handle dependency injection.
+    Note: The example below shows the state resolve points to a named function, which is easier to debug and easier to handle dependency injection.
 
   ```javascript
   /* even better */
@@ -1439,9 +998,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .config(config);
 
-  function config($routeProvider) {
-      $routeProvider
-          .when('/avengers', {
+  var config = ($stateProvider) => {
+      $stateProvider
+          .state('/avengers', {
               templateUrl: 'avengers.html',
               controller: 'Avengers',
               controllerAs: 'vm',
@@ -1449,21 +1008,26 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
                   moviesPrepService: moviesPrepService
               }
           });
-  }
+  };
 
-  function moviesPrepService(movieService) {
+  var moviesPrepService = (movieService) => {
       return movieService.getMovies();
-  }
+  };
 
   // avengers.js
   angular
       .module('app')
       .controller('Avengers', Avengers);
 
-  Avengers.$inject = ['moviesPrepService'];
-  function Avengers(moviesPrepService) {
-        var vm = this;
-        vm.movies = moviesPrepService.movies;
+  class Avengers {
+    
+    public movies: Array<IMovie>;
+
+    public static $inject = ['moviesPrepService'];
+    
+    constructor(moviesPrepService) {
+        this.movies = moviesPrepService.movies;
+    }
   }
   ```
     Note: The code example's dependency on `movieService` is not minification safe on its own. For details on how to make this code minification safe, see the sections on [dependency injection](#manual-annotating-for-dependency-injection) and on [minification and annotation](#minification-and-annotation).
@@ -1495,7 +1059,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
     /* avoid - not minification-safe*/
     angular.module('app').controller('Dashboard', d);function d(a, b) { }
     ```
-
+<!--
 ### Manually Identify Dependencies
 ###### [Style [Y091](#style-y091)]
 
@@ -1714,8 +1278,11 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
     });
 
     ```
+-->
 
 **[Back to top](#table-of-contents)**
+
+<!--
 
 ## Exception Handling
 
@@ -1837,14 +1404,15 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
     ```
 
 **[Back to top](#table-of-contents)**
+-->
 
 ## Naming
 
 ### Naming Guidelines
 ###### [Style [Y120](#style-y120)]
 
-  - Use consistent names for all components following a pattern that describes the component's feature then (optionally) its type. My recommended pattern is `feature.type.js`. There are 2 names for most assets:
-    * the file name (`avengers.controller.js`)
+  - Use consistent names for all components following a pattern that describes the component's feature then (optionally) its type. The recommended pattern is `feature-type.ts`. There are 2 names for most assets:
+    * the file name (`avengers-controller.js`)
     * the registered component name with Angular (`AvengersController`)
 
     *Why?*: Naming conventions help provide a consistent way to find content at a glance. Consistency within the project is vital. Consistency with a team is important. Consistency across a company provides tremendous efficiency.
@@ -1854,7 +1422,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 ### Feature File Names
 ###### [Style [Y121](#style-y121)]
 
-  - Use consistent names for all components following a pattern that describes the component's feature then (optionally) its type. My recommended pattern is `feature.type.js`.
+  - Use consistent names for all components following a pattern that describes the component's feature then (optionally) its type. The recommended pattern is `feature-type.ts`.
 
     *Why?*: Provides a consistent way to quickly identify components.
 
@@ -1862,60 +1430,29 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
     ```javascript
     /**
-     * common options
-     */
-
-    // Controllers
-    avengers.js
-    avengers.controller.js
-    avengersController.js
-
-    // Services/Factories
-    logger.js
-    logger.service.js
-    loggerService.js
-    ```
-
-    ```javascript
-    /**
      * recommended
      */
 
     // controllers
-    avengers.controller.js
-    avengers.controller.spec.js
+    avengers-controller.ts
+    __tests__/avengers-controller-spec.ts
 
     // services/factories
-    logger.service.js
-    logger.service.spec.js
+    logger-service.ts
+    __tests__/logger-service-spec.ts
 
     // constants
-    constants.js
+    constants.ts
 
     // module definition
-    avengers.module.js
-
-    // routes
-    avengers.routes.js
-    avengers.routes.spec.js
+    module-name/index.ts
 
     // configuration
-    avengers.config.js
+    avengers-config.ts
 
     // directives
-    avenger-profile.directive.js
-    avenger-profile.directive.spec.js
-    ```
-
-  Note: Another common convention is naming controller files without the word `controller` in the file name such as `avengers.js` instead of `avengers.controller.js`. All other conventions still hold using a suffix of the type. Controllers are the most common type of component so this just saves typing and is still easily identifiable. I recommend you choose 1 convention and be consistent for your team. My preference is `avengers.controller.js`.
-
-    ```javascript
-    /**
-     * recommended
-     */
-    // Controllers
-    avengers.js
-    avengers.spec.js
+    avenger-profile-directive.ts
+    __tests__/avenger-profile-directive-spec.ts
     ```
 
 ### Test File Names
@@ -1931,10 +1468,9 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
     /**
      * recommended
      */
-    avengers.controller.spec.js
-    logger.service.spec.js
-    avengers.routes.spec.js
-    avenger-profile.directive.spec.js
+    avengers-controller-spec.ts
+    logger-service-spec.ts
+    avenger-profile-directive-spec.ts
     ```
 
 ### Controller Names
@@ -1956,7 +1492,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
         .module
         .controller('HeroAvengersController', HeroAvengersController);
 
-    function HeroAvengersController() { }
+    class HeroAvengersController { }
     ```
 
 ### Controller Name Suffix
@@ -1971,12 +1507,12 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
      * recommended
      */
 
-    // avengers.controller.js
+    // avengers-controller.ts
     angular
         .module
         .controller('AvengersController', AvengersController);
 
-    function AvengersController() { }
+    class AvengersController { }
     ```
 
 ### Factory and Service Names
@@ -1997,12 +1533,12 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
      * recommended
      */
 
-    // logger.service.js
+    // logger-service.ts
     angular
         .module
-        .factory('logger', logger);
+        .service('logger', logger);
 
-    function logger() { }
+    class logger { }
     ```
 
     ```javascript
@@ -2010,19 +1546,19 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
      * recommended
      */
 
-    // credit.service.js
+    // credit-service.ts
     angular
         .module
-        .factory('creditService', creditService);
+        .service('creditService', creditService);
 
-    function creditService() { }
+    class creditService { }
 
-    // customer.service.js
+    // customer.service.ts
     angular
         .module
         .service('customersService', customersService);
 
-    function customersService() { }
+    class customersService { }
     ```
 
 ### Directive Component Names
@@ -2040,13 +1576,13 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
     // avenger-profile.directive.js
     angular
         .module
-        .directive('xxAvengerProfile', xxAvengerProfile);
+        .directive('jhcAvengerProfile', avengerProfile);
 
-    // usage is <xx-avenger-profile> </xx-avenger-profile>
+    // usage is <jhc-avenger-profile> </jhc-avenger-profile>
 
-    function xxAvengerProfile() { }
+    function avengerProfile() { }
     ```
-
+<!--
 ### Modules
 ###### [Style [Y127](#style-y127)]
 
@@ -2069,7 +1605,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 ###### [Style [Y129](#style-y129)]
 
   - Separate route configuration into its own file. Examples might be `app.route.js` for the main module and `admin.route.js` for the `admin` module. Even in smaller apps I prefer this separation from the rest of the configuration.
-
+-->
 **[Back to top](#table-of-contents)**
 
 ## Application Structure LIFT Principle
@@ -2143,14 +1679,14 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
   - Have a near term view of implementation and a long term vision. In other words, start small but keep in mind on where the app is heading down the road. All of the app's code goes in a root folder named `app`. All content is 1 feature per file. Each controller, service, module, view is in its own file. All 3rd party vendor scripts are stored in another root folder and not in the `app` folder. I didn't write them and I don't want them cluttering my app (`bower_components`, `scripts`, `lib`).
 
     Note: Find more details and reasoning behind the structure at [this original post on application structure](http://www.johnpapa.net/angular-app-structuring-guidelines/).
-
+<!--
 ### Layout
 ###### [Style [Y151](#style-y151)]
 
   - Place components that define the overall layout of the application in a folder named `layout`. These may include a shell view and controller may act as the container for the app, navigation, menus, content areas, and other regions.
 
     *Why?*: Organizes all layout in a single place re-used throughout the application.
-
+-->
 ### Folders-by-Feature Structure
 ###### [Style [Y152](#style-y152)]
 
@@ -2170,37 +1706,37 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
      */
 
     app/
-        app.module.js
-        app.config.js
+        app.module.ts
+        app.config.ts
         components/
-            calendar.directive.js
-            calendar.directive.html
-            user-profile.directive.js
-            user-profile.directive.html
+            calendar-directive.ts
+            calendar-directive.html
+            user-profile-directive.ts
+            user-profile-directive.html
         layout/
             shell.html
-            shell.controller.js
+            shell-controller.ts
             topnav.html
-            topnav.controller.js
+            topnav-controller.ts
         people/
             attendees.html
-            attendees.controller.js
-            people.routes.js
+            attendees-controller.ts
+            people-routes.ts
             speakers.html
-            speakers.controller.js
+            speakers-controller.ts
             speaker-detail.html
-            speaker-detail.controller.js
+            speaker-detail-controller.ts
         services/
-            data.service.js
-            localstorage.service.js
-            logger.service.js
-            spinner.service.js
+            data-service.ts
+            localstorage-service.ts
+            logger-service.ts
+            spinner-service.ts
         sessions/
             sessions.html
-            sessions.controller.js
-            sessions.routes.js
+            sessions-controller.ts
+            sessions-routes.ts
             session-detail.html
-            session-detail.controller.js
+            session-detail-controller.ts
     ```
 
       ![Sample App Structure](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/assets/modularity-2.png)
@@ -2215,28 +1751,28 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
     */
 
     app/
-        app.module.js
-        app.config.js
-        app.routes.js
-        directives.js
+        app-module.ts
+        app-config.ts
+        app-routes.ts
+        directives.ts
         controllers/
-            attendees.js
-            session-detail.js
-            sessions.js
-            shell.js
-            speakers.js
-            speaker-detail.js
-            topnav.js
+            attendees.ts
+            session-detail.ts
+            sessions.ts
+            shell.ts
+            speakers.ts
+            speaker-detail.ts
+            topnav.ts
         directives/
-            calendar.directive.js
-            calendar.directive.html
-            user-profile.directive.js
-            user-profile.directive.html
+            calendar-directive.ts
+            calendar-directive.html
+            user-profile-directive.ts
+            user-profile-directive.html
         services/
-            dataservice.js
-            localstorage.js
-            logger.js
-            spinner.js
+            dataservice.ts
+            localstorage.ts
+            logger.ts
+            spinner.ts
         views/
             attendees.html
             session-detail.html
@@ -2327,10 +1863,7 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .config(configure);
 
-  configure.$inject =
-      ['routerHelperProvider', 'exceptionHandlerProvider', 'toastr'];
-
-  function configure (routerHelperProvider, exceptionHandlerProvider, toastr) {
+  var configure = ['routerHelperProvider', 'exceptionHandlerProvider', 'toastr', (routerHelperProvider, exceptionHandlerProvider, toastr) {
       exceptionHandlerProvider.configure(config.appErrorPrefix);
       configureStateHelper();
 
@@ -2339,12 +1872,12 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
 
       ////////////////
 
-      function configureStateHelper() {
+      var configureStateHelper = [() => {
           routerHelperProvider.configure({
               docTitle: 'NG-Modular: '
           });
-      }
-  }
+      }];
+  }];
   ```
 
 ### Run Blocks
@@ -2359,12 +1892,10 @@ While this guide explains the *what*, *why* and *how*, I find it helpful to see 
       .module('app')
       .run(runBlock);
 
-  runBlock.$inject = ['authenticator', 'translator'];
-
-  function runBlock(authenticator, translator) {
+  var runBlock = ['authenticator', 'translator', (authenticator, translator) => {
       authenticator.initialize();
       translator.initialize();
-  }
+  }];
   ```
 
 **[Back to top](#table-of-contents)**
@@ -2416,15 +1947,13 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
     // and so on
     ```
-
+<!--
 ### Testing Library
 ###### [Style [Y191](#style-y191)]
 
-  - Use [Jasmine](http://jasmine.github.io/) or [Mocha](http://mochajs.org) for unit testing.
+  - Use [Jasmine](http://jasmine.github.io/) for unit testing.
 
-    *Why?*: Both Jasmine and Mocha are widely used in the Angular community. Both are stable, well maintained, and provide robust testing features.
-
-    Note: When using Mocha, also consider choosing an assert library such as [Chai](http://chaijs.com). I prefer Mocha.
+    *Why?*: Jasmine is widely used in the Angular community. Both are stable, well maintained, and provide robust testing features.
 
 ### Test Runner
 ###### [Style [Y192](#style-y192)]
@@ -2490,7 +2019,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
 
   - Use [Sinon](http://sinonjs.org/) for stubbing and spying.
 
-    *Why?*: Sinon works well with both Jasmine and Mocha and extends the stubbing and spying features they offer.
+    *Why?*: Sinon works well with both Jasmine and extends the stubbing and spying features they offer.
 
     *Why?*: Sinon makes it easier to toggle between Jasmine and Mocha, if you want to try both.
 
@@ -2557,7 +2086,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
                              /customers.route.js
                              /customers.route.spec.js
     ```
-
+-->
 **[Back to top](#table-of-contents)**
 
 ## Animations
@@ -2577,7 +2106,7 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
   - Use short durations for animations. I generally start with 300ms and adjust until appropriate.
 
     *Why?*: Long animations can have the reverse affect on User Experience and perceived performance by giving the appearance of a slow application.
-
+<!--
 ### animate.css
 ###### [Style [Y212](#style-y212)]
 
@@ -2590,9 +2119,9 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
     *Why?*: animate.css is widely used and tested.
 
     Note: See this [great post by Matias Niemelä on Angular animations](http://www.yearofmoo.com/2013/08/remastered-animation-in-angularjs-1-2.html)
-
+-->
 **[Back to top](#table-of-contents)**
-
+<!--
 ## Comments
 
 ### jsDoc
@@ -3151,6 +2680,7 @@ Use [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) for creating automa
     ```
 
 **[Back to top](#table-of-contents)**
+-->
 
 ## Filters
 
