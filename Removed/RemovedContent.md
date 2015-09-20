@@ -1,4 +1,5 @@
-  <!--1. [JSHint](#js-hint)
+  {% comment %}
+  1. [JSHint](#js-hint)
   1. [JSCS](#jscs)
   1. [Constants](#constants)
   1. [File Templates and Snippets](#file-templates-and-snippets)
@@ -1095,3 +1096,4 @@ Use [Gulp](http://gulpjs.com) or [Grunt](http://gruntjs.com) for creating automa
     ```
 
 **[Back to top](#table-of-contents)**
+{% endcomment %}
