@@ -1608,39 +1608,38 @@ Unit testing helps maintain clean code, as such I included some of my recommenda
      * Logger Factory
      * @namespace Factories
      */
-    (function() {
       angular
           .module('app')
-          .factory('logger', logger);
+          .service('logger', logger);
 
       /**
        * @namespace Logger
        * @desc Application wide logger
        * @memberOf Factories
        */
-      function logger($log) {
-          var service = {
-             logError: logError
-          };
-          return service;
+       class Logger {
 
-          ////////////
+         public static $inject = ['$log'];
 
-          /**
-           * @name logError
-           * @desc Logs errors
-           * @param {String} msg Message to log
-           * @returns {String}
-           * @memberOf Factories.Logger
-           */
-          function logError(msg) {
+         constructor(private $log: ng.ILogService) {
+         }
+
+         /**
+         * @name logError
+         * @desc Logs errors
+         * @param {String} msg Message to log
+         * @returns {String}
+         * @memberOf Factories.Logger
+         */
+         LogError(msg: string): string {
 
               var loggedMsg = 'Error: ' + msg;
-              $log.error(loggedMsg);
+              this.$log.error(loggedMsg);
               return loggedMsg;
-          };
+         }
       }
-    })();
+
+    export = Logger;
 
     ```
 
