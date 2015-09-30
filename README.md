@@ -1541,7 +1541,8 @@ The purpose of this style guide is to provide guidance on building Element appli
 **[Back to top](#table-of-contents)**
 
 ## Testing
-Unit testing helps maintain clean code, as such I included some of my recommendations for unit testing foundations with links for more information.
+
+Best practice guides for unit and e2e testing in Element can be found here [Unit testing](http://jhcwiki.jhc.co.uk/wiki/index.php/Element_Unit_Testing) and here [Protractor testing](http://jhcwiki.jhc.co.uk/wiki/index.php/Element_Protractor_Testing)
 
 ### Write Tests with Stories
 ###### [Style [Y190](#style-y190)]
