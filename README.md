@@ -641,11 +641,9 @@ The purpose of this style guide is to provide guidance on building Element appli
 ### Provide jhc as a Unique Directive Prefix
 ###### [Style [Y073](#style-y073)]
 
-  - Provide jhc as a short, unique and descriptive directive prefix such as `jhcSalesCustomerInfo` which would be declared in HTML as `acme-sales-customer-info`.
+  - Provide jhc as a short, unique and descriptive directive prefix such as `jhcSalesCustomerInfo` which would be declared in HTML as `jhc-sales-customer-info`.
 
-    *Why?*: The unique short prefix identifies the directive's context and origin. For example a prefix of `cc-` may indicate that the directive is part of a CodeCamper app while `acme-` may indicate a directive for the Acme company.
-
-    Note: Avoid `ng-` as these are reserved for Angular directives. Research widely used directives to avoid naming conflicts, such as `ion-` for the [Ionic Framework](http://ionicframework.com/).
+    *Why?*: The unique short prefix identifies the directive's context and origin.
 
 ### Restrict to Elements and Attributes
 ###### [Style [Y074](#style-y074)]
